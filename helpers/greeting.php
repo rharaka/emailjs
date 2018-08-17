@@ -13,7 +13,7 @@ $outp = "";
 
 $greeting = $idN;
 
-$outp .= '{"loggedName":"'.$greeting.'", "FID":"'.$idR.'", "Role":"'.$rsR['role'].'", "Intro":"'.$rsR['intro'].'", "Nom":"'.$rsR['nom'].'", "Email":"'.$rsR['email'].'"}';
+$outp .= '{"loggedName":"'.$greeting.'", "Picture":"'.$picture.'", "FID":"'.$idR.'", "Role":"'.$rsR['role'].'", "Intro":"'.$rsR['intro'].'", "Nom":"'.$rsR['nom'].'", "Email":"'.$rsR['email'].'"}';
 
 $outp ='{"records":['.$outp.']}';
 
