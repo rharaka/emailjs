@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <style>
+    body {
+      margin: 15px; 
+    }
+
+    body > div {
+        width: 570px;
+        margin: 15px auto;
+    }
+    table {
+      width: 570px;
+      margin-top: 20px;
+      display: inline-table;
+      border: none !important;
+      padding: 0 !important;
+    }
+    table, th , td  {
+      border: 1px solid grey;
+      border-collapse: collapse;
+      padding: 5px;
+    }
+    table tbody:nth-child(odd) {
+      background-color: #f1f1f1;
+    }
+    table tbody:nth-child(even) {
+      background-color: #ffffff;
+    }
+    .tr-hidden, .tr-hidden-d {
+      display: none;
+    }
+    div.tr-hidden {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #d1d1d1;
+      margin: auto;
+      top: 0;
+      left: 0;
+      opacity: 0.92;
+    }
+    div.tr-hidden > div {
+      background: #fff;
+      padding: 30px;
+      width: 225px;
+      margin-left: 43%;
+      margin-top: 19%;
+      display: inline-block;
+    }
+    textarea {
+      width: 221px;
+      height: 90px;
+    }
+    button, form {
+      float: left;
+    }
+    #greeting {
+      float: left;
+      width: 50%;
+      margin: 5px auto;
+      margin-bottom: 20px;
+    }
+    #account {
+        float: right;
+        width: 45%;
+        margin: 5px auto;
+    }
+    #account > a {
+        float: right;
+    }
+    button.close-form {
+        margin-left: 3px;
+        float: right;
+    }
+    div.account {
+        width: 145px;
+        background: #f1f1f1;
+        height: 67px;
+        left: auto;
+        top: 40px;
+        margin-left: 79px;
+        padding: 15px;
+        border: 1px solid #ddd;
+    }
+    div.account > form {
+        padding: 16px;
+        margin: 0;
+        margin-left: -278px;
+        margin-top: -70px;
+        background: #fff;
+        border: 1px solid #ddd;
+        width: 228px;
+    }
+    div.account > form > span {
+        float: right;
+        position: relative;
+        right: -49px;
+        top: -1px;
+    }
+    div.account > form.formChngEmil {
+        margin-top: -54px;
+    }
+    div.account > form.formChngPass {
+        margin-top: -38px;
+    }
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    div.intro {
+        width: 170px;
+        height: auto;
+        padding: 4px 4px;
+        position: absolute;
+        z-index: 2;
+        left: -314px;
+        right: 0;
+        top: 133px;
+    }
+  </style>
+
+  <!-- <link rel="stylesheet" type="text/css" href="css/style.css"> -->
+
+  <script src="js/jquery-latest.js"></script>
+  <script src="js/angular.min.js"></script>
+  <script src="js/angular-route.min.js"></script>
+  <script src="js/jquery.tablesorter.min.js"></script>
+  <script src="js/jquery.tablesorter.js"></script>
+  <script src="js/jquery.metadata.js"></script>
+  <script src="js/js.js"></script>
+
+</head>
+
+<body>
+
+  <script src="js/app.js"></script>
+
+  <div ng-app="myApp" ng-controller="customersCtrl">
+
+  <header>
+    
+    <div id="greeting" ng-repeat="i in greetings">Welcome {{ i.loggedName }}</div>
+
+    <button ng-click="showForm('insertForm')" class="show-insertForm">+</button>
+
+    <div id="account" ng-repeat="i in greetings">
+      <a href="#" ng-click="showForm('account-'+i.FID)">Account</a>
+      <div  id="account-{{ i.FID }}" class="tr-hidden account">
+        <button ng-click="hideForm('account-'+i.FID)" class="tr-hidden close-form" id="closeForm-account-{{ i.FID }}">X</button>
+        <ul>
+          <li><a href="#" ng-click="showForm('formPrfl-'+i.FID)">< Edit Profile</a></li>
+          <li><a href="#" ng-click="showForm('formChngEmil-'+i.FID)">< Change Email</a></li>
+          <li><a href="#" ng-click="showForm('formChngPass-'+i.FID)">< Change Password</a></li>
+          <li><a href="#" ng-click="logoutUser(i.FID)">< Log Out</a></li>
+        </ul>
+          
+        <form ng-repeat="i in greetings" id="formPrfl-{{ i.FID }}" class="tr-hidden account-form formPrfl">
+          <button ng-click="hideForm('formPrfl-'+i.FID)" class="tr-hidden close-form" id="closeForm-formPrfl-{{ i.FID }}">X</button><span><</span>
+          Nom:-<input type="text" name="benom" id="benom" value="{{ i.Nom }}" />
+          Intro:-<textarea name="beintro" id="beintro">{{ i.Intro }}</textarea>
+          <input type="button" value="Submit" ng-click="editProfile()" />
+        </form>
+
+        <form ng-repeat="i in greetings" id="formChngEmil-{{ i.FID }}" class="tr-hidden account-form formChngEmil">
+          <button ng-click="hideForm('formChngEmil-'+i.FID)" class="tr-hidden close-form" id="closeForm-formChngEmil-{{ i.FID }}">X</button><span><</span>
+          Old Email:-<input type="text" ng-model="bemail1" id="bemailOld" />
+          New Email:-<input type="text" ng-model="bemail2" id="bemailNew1" /><br>
+          Retype New Email:-<input type="text" ng-model="bemail3" id="bemailNew2" />
+          <input type="button" value="Submit" ng-click="changeEmail()" />
+        </form>
+
+        <form ng-repeat="i in greetings" id="formChngPass-{{ i.FID }}" class="tr-hidden account-form formChngPass">
+          <button ng-click="hideForm('formChngPass-'+i.FID)" class="tr-hidden close-form" id="closeForm-formChngPass-{{ i.FID }}">X</button><span><</span>
+          Old Password:-<input type="password" ng-model="bepass1" id="bepassOld" />
+          New Password:-<input type="password" ng-model="bepass2" id="bepassNew1" /><br>
+          Retype New Password:-<input type="password" ng-model="bepass3" id="bepassNew2" />
+          <input type="button" value="Submit" ng-click="changePassword()" />
+        </form>
+
+      </div>
+    </div>
+
+  </header>
+
+  <form id="insertForm" class="tr-hidden">
+    Name:-<input type="text" ng-model="bname" id="bnameInsert" />
+    Email:-<input type="text" ng-model="bemail" id="bemailInsert" />
+    <input type="button" value="Submit" ng-click="insertData()" />
+  </form>
+  <button ng-click="hideForm('insertForm')" class="tr-hidden close-form" id="closeForm-insertForm">X</button>
+   
+  <table id="myTable2">
+    <thead>
+      <tr>
+        <th ng-click="selectData()">ID</th>
+        <th onclick="sortTable(1)">Nom</th>
+        <th onclick="sortTable(2)">Email</th>
+        <th>Actions</th>
+        <th>Sent</th>
+        <th>Inbox</th>
+      </tr>
+    </thead>
+    <tbody ng-repeat="x in names">
+      <tr>
+          <td>{{ x.II }}</td>
+          <td ng-mouseenter="showForm('intro'+x.ID)" ng-mouseleave="hideForm('intro'+x.ID)" >
+            <span id="nom{{ x.ID }}">{{ x.Nom }}</span>
+            <div ng-if="x.Intro!=''" id="intro{{ x.ID }}" class="tr-hidden intro">{{ x.Intro }}</div>
+          </td>
+          <td>{{ x.Email }}</td>
+          <td>
+            <button ng-click="showEmail(x.ID)">Email</button>
+            <button ng-repeat="i in greetings" ng-show="{{ i.Role==7 }}" ng-click="disableItem(x.ID, x.isValid, i.Role)">{{ x.Valid }}</button>
+            <button ng-repeat="i in greetings" ng-show="{{ i.Role==7 }}" ng-click="showEdit(x.ID, i.Role)">Edit</button>
+            <button ng-repeat="i in greetings" ng-show="{{ i.Role==7 }}" ng-click="showDelete(x.ID, i.Role)">Delete</button>
+            <!-- <button ng-repeat="i in greetings" ng-click="x.$isBlocked===0 ? blockEmail(x.ID, i.FID) : alert('blockedTest')">{{ x.Block }}</button> -->
+            <button ng-if="x.isBlocked==0" ng-repeat="i in greetings" ng-click="alert('blockedTest 0')">{{ x.Block }}</button>
+            <button ng-if="x.isBlocked==1" ng-repeat="i in greetings" ng-click="alert('blockedTest 1')">{{ x.Block }}</button>
+
+            <div id="tr{{ x.ID }}" class="tr-hidden">
+              <div>
+                <form>
+                  Name:-<input type="text" id="bname{{ x.ID }}" value="{{ x.Nom }}" />
+                  Email:-<input type="text" id="bemail{{ x.ID }}" value="{{ x.Email }}" />
+                  <!-- <input type="hidden" ng-model="bid" ng-value="{{ x.ID }}"> -->
+                  <input type="button" value="Submit" ng-click="editData(x.ID)" />
+                  <input type="button" value="Cancel" ng-click="hideEdit(x.ID)" />
+                </form>
+              </div>
+            </div>
+            <div id="e-tr{{ x.ID }}" class="tr-hidden">
+              <div>
+                <form>
+                  Name: {{ x.Nom }} <br>
+                  Email: {{ x.Email }} <br>
+                  Message:-<textarea id="email{{ x.ID }}"></textarea> <br>
+                  <!-- <input type="hidden" ng-model="bid" ng-value="{{ x.ID }}">
+                  <input ng-repeat="i in greetings" type="hidden" ng-model="fid" ng-value="{{ i.FID }}"> -->
+                  <input ng-repeat="i in greetings" type="button" value="Send" ng-click="sendEmail(x.ID, i.FID, x.Nom, x.Email)" />
+                  <input type="button" value="Cancel" ng-click="hideEmail(x.ID)" />
+                </form>
+              </div>
+            </div>
+          </td>
+          <td>
+            <a href="" ng-click="showEmails(x.ID)">{{x.emailCnt>0 ? x.emailCnt : ''}}</a>{{x.emailCnt>0 ? '' : '0'}}
+            <div id="es-tr{{ x.ID }}" class="tr-hidden">
+              <div class="messages">
+                Emails to : {{ x.Email }}
+                <p>
+                  {{ x.Emails }}
+                </p>
+                <input type="button" value="Cancel" ng-click="hideEmails(x.ID)" />
+              </div>
+            </div>
+          </td>
+          <td>
+            <a href="" ng-click="showEmailsi(x.ID)">{{x.emailCntI>0 ? x.emailCntI : ''}}</a>{{x.emailCntI>0 ? '' : '0'}}
+            <div id="ei-tr{{ x.ID }}" class="tr-hidden">
+              <div class="messages">
+                Emails from : {{ x.Email }}
+                <p>
+                  {{ x.EmailsI }}
+                </p>
+                <input type="button" value="Cancel" ng-click="hideEmailsi(x.ID)" />
+              </div>
+            </div>
+          </td>
+      </tr>
+    </tbody>
+  </table>
+   
+  </div>
+ 
+</body>
+</html>
